@@ -38,8 +38,7 @@ const phoneticMapping = {
                 pinyin: 'Ài',
                 englishMeaning: 'Love, Affection',
                 chineseMeaning: '爱心、关爱'
-            },
-            // 为所有字符添加英文翻译
+            }
         ],
         'b': [
             {
@@ -48,19 +47,85 @@ const phoneticMapping = {
                 englishMeaning: 'Erudite, Extensive',
                 chineseMeaning: '博学、渊博'
             },
-            // 更新其他字母的映射数据
+            {
+                char: '北',
+                pinyin: 'Běi',
+                englishMeaning: 'North, Superior',
+                chineseMeaning: '北方、卓越'
+            }
         ],
-        // 更新剩余字母的映射数据
-    }
+        'w': [
+            {
+                char: '文',
+                pinyin: 'Wén',
+                englishMeaning: 'Culture, Literature',
+                chineseMeaning: '文化、文学'
+            },
+            {
+                char: '伟',
+                pinyin: 'Wěi',
+                englishMeaning: 'Great, Extraordinary',
+                chineseMeaning: '伟大、非凡'
+            }
+        ]
+    },
+    lastNameInitials: {
+        'l': [
+            {
+                char: '李',
+                pinyin: 'Lǐ',
+                englishMeaning: 'Plum',
+                chineseMeaning: '李子、美好'
+            },
+            {
+                char: '林',
+                pinyin: 'Lín',
+                englishMeaning: 'Forest',
+                chineseMeaning: '森林、茂盛'
+            }
+        ],
+        'w': [
+            {
+                char: '王',
+                pinyin: 'Wáng',
+                englishMeaning: 'King',
+                chineseMeaning: '君王、尊贵'
+            },
+            {
+                char: '吴',
+                pinyin: 'Wú',
+                englishMeaning: 'Military, Martial',
+                chineseMeaning: '武力、勇武'
+            }
+        ]
+    },
+    secondChars: [
+        {
+            char: '华',
+            pinyin: 'Huá',
+            englishMeaning: 'Splendid, Magnificent',
+            chineseMeaning: '华丽、辉煌'
+        },
+        {
+            char: '明',
+            pinyin: 'Míng',
+            englishMeaning: 'Bright, Clear',
+            chineseMeaning: '明亮、清晰'
+        },
+        {
+            char: '德',
+            pinyin: 'Dé',
+            englishMeaning: 'Virtue, Morality',
+            chineseMeaning: '道德、品德'
+        },
+        {
+            char: '强',
+            pinyin: 'Qiáng',
+            englishMeaning: 'Strong, Powerful',
+            chineseMeaning: '强大、有力'
+        }
+    ]
 };
-
-// 在生成名字时正确分配两个字段
-const generatedNames = selectedChars.map(char => ({
-    chinese: nameStructure,
-    pinyin: pinyinStructure,
-    englishMeaning: char.englishMeaning || 'No translation',
-    chineseMeaning: char.chineseMeaning || '无含义'
-}));
 
 // API endpoint to generate Chinese names
 app.post('/generate-name', async (req, res) => {
@@ -268,6 +333,15 @@ app.post('/generate-name', async (req, res) => {
             const randomFirstChar = firstNameChars[Math.floor(Math.random() * firstNameChars.length)];
             const randomSecondChar = phoneticMapping.secondChars[Math.floor(Math.random() * phoneticMapping.secondChars.length)];
             
+            // 确保meaning属性存在，如果不存在则提供默认值
+            if (!randomFirstChar.meaning) {
+                randomFirstChar.meaning = randomFirstChar.englishMeaning || randomFirstChar.chineseMeaning || 'beautiful character';
+            }
+            
+            if (!randomSecondChar.meaning) {
+                randomSecondChar.meaning = randomSecondChar.englishMeaning || randomSecondChar.chineseMeaning || 'auspicious character';
+            }
+            
             let chineseName = '';
             let pinyinName = '';
             let meaningDesc = '';
@@ -286,7 +360,7 @@ app.post('/generate-name', async (req, res) => {
             }
             
             // 分离英文含义和中文含义
-            const englishMeaningDesc = `"${randomFirstChar.char}" means ${randomFirstChar.meaning.replace(/[，。]/g, ', ')}, "${randomSecondChar.char}" means ${randomSecondChar.meaning.replace(/[，。]/g, ', ')}. The name sounds similar to "${firstName}${lastName ? ' ' + lastName : ''}" and symbolizes talent and bright future.`;
+            const englishMeaningDesc = `"${randomFirstChar.char}" means ${randomFirstChar.englishMeaning ? randomFirstChar.englishMeaning.replace(/[，。]/g, ', ') : 'beautiful character'}, "${randomSecondChar.char}" means ${randomSecondChar.englishMeaning ? randomSecondChar.englishMeaning.replace(/[，。]/g, ', ') : 'auspicious character'}. The name sounds similar to "${firstName}${lastName ? ' ' + lastName : ''}" and symbolizes talent and bright future.`;
             
             return {
                 chinese: chineseName,

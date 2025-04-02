@@ -53,17 +53,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const nameCard = document.createElement('div');
             nameCard.className = 'name-card';
             
-            // 确保使用englishMeaning和chineseMeaning分别显示英文和中文含义
             nameCard.innerHTML = `
                 <div class="chinese-name">${name.chinese}</div>
                 <div class="pinyin">${name.pinyin}</div>
                 <div class="meaning-section">
                     <div class="meaning-title"><strong>English Meaning</strong>:</div>
-                    <div class="meaning-content english-meaning">${name.englishMeaning || ""}</div>
+                    <div class="meaning-content english-meaning">${name.englishMeaning}</div>
                 </div>
                 <div class="meaning-section">
                     <div class="meaning-title"><strong>中文含义</strong>:</div>
-                    <div class="meaning-content chinese-meaning">${name.chineseMeaning || ""}</div>
+                    <div class="meaning-content chinese-meaning">${name.chineseMeaning}</div>
                 </div>
             `;
             
