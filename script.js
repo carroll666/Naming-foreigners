@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
         resultsSection.style.display = 'none';
         
         try {
-            // Call our local server API
-            const response = await fetch('http://localhost:3001/generate-name', {
+            // Call our API (works both locally and when deployed)
+            const response = await fetch('/generate-name', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

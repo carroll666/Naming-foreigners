@@ -2,9 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const bodyParser = require('body-parser');
+// 加载环境变量
+require('dotenv').config();
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());
@@ -1361,5 +1363,5 @@ app.post('/generate-name', async (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
