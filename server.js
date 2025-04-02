@@ -30,72 +30,746 @@ const phoneticMapping = {
             { 
                 char: '安', 
                 pinyin: 'Ān',
-                englishMeaning: 'Peaceful, Quiet',
-                chineseMeaning: '安静、平安'
+                englishMeaning: 'Peace and tranquility',
+                chineseMeaning: '给人一种安宁祥和的感觉，如同平静的湖面'
             },
             { 
                 char: '爱',
                 pinyin: 'Ài',
-                englishMeaning: 'Love, Affection',
-                chineseMeaning: '爱心、关爱'
+                englishMeaning: 'Love and compassion',
+                chineseMeaning: '充满爱心与温暖，像阳光一样照耀他人'
+            },
+            { 
+                char: '艾',
+                pinyin: 'Ài',
+                englishMeaning: 'Mugwort herb, represents resilience',
+                chineseMeaning: '坚韧不拔，充满生命力，如艾草般顽强'
             }
         ],
         'b': [
             {
                 char: '博',
                 pinyin: 'Bó',
-                englishMeaning: 'Erudite, Extensive',
-                chineseMeaning: '博学、渊博'
+                englishMeaning: 'Extensive knowledge and wisdom',
+                chineseMeaning: '学识渊博，见多识广，如大海般包容万物'
             },
             {
                 char: '北',
                 pinyin: 'Běi',
-                englishMeaning: 'North, Superior',
-                chineseMeaning: '北方、卓越'
+                englishMeaning: 'Northern direction, guidance',
+                chineseMeaning: '如北极星般指引方向，坚定不移'
+            },
+            {
+                char: '百',
+                pinyin: 'Bǎi',
+                englishMeaning: 'Hundred, representing abundance',
+                chineseMeaning: '才华横溢，多才多艺，百般武艺样样精通'
+            }
+        ],
+        'c': [
+            {
+                char: '辰',
+                pinyin: 'Chén',
+                englishMeaning: 'Morning, a new beginning',
+                chineseMeaning: '如旭日东升，象征新的希望和开始'
+            },
+            {
+                char: '晨',
+                pinyin: 'Chén',
+                englishMeaning: 'Dawn, early morning',
+                chineseMeaning: '清新明亮，如晨光熹微，充满活力'
+            }
+        ],
+        'd': [
+            {
+                char: '德',
+                pinyin: 'Dé',
+                englishMeaning: 'Virtue and moral excellence',
+                chineseMeaning: '品德高尚，正直无私，受人敬仰'
+            },
+            {
+                char: '东',
+                pinyin: 'Dōng',
+                englishMeaning: 'East, where the sun rises',
+                chineseMeaning: '如旭日东升，充满朝气和希望'
+            }
+        ],
+        'e': [
+            {
+                char: '恩',
+                pinyin: 'Ēn',
+                englishMeaning: 'Kindness and grace',
+                chineseMeaning: '恩泽四方，心怀感恩，乐于助人'
+            },
+            {
+                char: '尔',
+                pinyin: 'Ěr',
+                englishMeaning: 'You, closeness',
+                chineseMeaning: '亲切友善，平易近人，令人如沐春风'
+            }
+        ],
+        'f': [
+            {
+                char: '芳',
+                pinyin: 'Fāng',
+                englishMeaning: 'Fragrant and beautiful',
+                chineseMeaning: '如花般芬芳美丽，令人赏心悦目'
+            },
+            {
+                char: '飞',
+                pinyin: 'Fēi',
+                englishMeaning: 'To fly, soaring ambition',
+                chineseMeaning: '志向高远，如雄鹰展翅，自由翱翔'
+            }
+        ],
+        'g': [
+            {
+                char: '国',
+                pinyin: 'Guó',
+                englishMeaning: 'Country, patriotism',
+                chineseMeaning: '爱国敬业，胸怀天下，心系家国'
+            },
+            {
+                char: '光',
+                pinyin: 'Guāng',
+                englishMeaning: 'Light, brightness',
+                chineseMeaning: '光明磊落，照亮前路，驱散黑暗'
+            }
+        ],
+        'h': [
+            {
+                char: '海',
+                pinyin: 'Hǎi',
+                englishMeaning: 'Ocean, vast and deep',
+                chineseMeaning: '胸怀宽广，如大海般包容万物'
+            },
+            {
+                char: '华',
+                pinyin: 'Huá',
+                englishMeaning: 'Splendid and magnificent',
+                chineseMeaning: '光彩夺目，才华横溢，卓尔不凡'
+            }
+        ],
+        'i': [
+            {
+                char: '伊',
+                pinyin: 'Yī',
+                englishMeaning: 'Elegant and graceful',
+                chineseMeaning: '优雅大方，举止得体，风姿绰约'
+            },
+            {
+                char: '依',
+                pinyin: 'Yī',
+                englishMeaning: 'To rely on, dependable',
+                chineseMeaning: '可靠踏实，值得依赖，如大树般坚实'
+            }
+        ],
+        'j': [
+            {
+                char: '嘉',
+                pinyin: 'Jiā',
+                englishMeaning: 'Excellent and praiseworthy',
+                chineseMeaning: '品行嘉言懿行，堪称楷模'
+            },
+            {
+                char: '佳',
+                pinyin: 'Jiā',
+                englishMeaning: 'Good and beautiful',
+                chineseMeaning: '美好优秀，如沐春风，令人愉悦'
+            },
+            {
+                char: '健',
+                pinyin: 'Jiàn',
+                englishMeaning: 'Healthy and strong',
+                chineseMeaning: '身体健康，意志坚强，生机勃勃'
+            }
+        ],
+        'k': [
+            {
+                char: '凯',
+                pinyin: 'Kǎi',
+                englishMeaning: 'Victorious and triumphant',
+                chineseMeaning: '凯旋而归，所向披靡，无往不胜'
+            },
+            {
+                char: '康',
+                pinyin: 'Kāng',
+                englishMeaning: 'Health and wellness',
+                chineseMeaning: '健康平安，生活美满，无忧无虑'
+            }
+        ],
+        'l': [
+            {
+                char: '力',
+                pinyin: 'Lì',
+                englishMeaning: 'Strength and power',
+                chineseMeaning: '力量十足，坚韧不拔，勇往直前'
+            },
+            {
+                char: '立',
+                pinyin: 'Lì',
+                englishMeaning: 'To stand, independence',
+                chineseMeaning: '自立自强，顶天立地，做人做事有原则'
+            },
+            {
+                char: '龙',
+                pinyin: 'Lóng',
+                englishMeaning: 'Dragon, symbol of power',
+                chineseMeaning: '如龙腾飞，气势磅礴，充满活力'
+            }
+        ],
+        'm': [
+            {
+                char: '明',
+                pinyin: 'Míng',
+                englishMeaning: 'Bright and clear-minded',
+                chineseMeaning: '明察秋毫，思维清晰，光明磊落'
+            },
+            {
+                char: '梦',
+                pinyin: 'Mèng',
+                englishMeaning: 'Dream, aspiration',
+                chineseMeaning: '心怀梦想，追求卓越，不断进取'
+            },
+            {
+                char: '茂',
+                pinyin: 'Mào',
+                englishMeaning: 'Flourishing and prosperous',
+                chineseMeaning: '茂盛繁荣，生机勃勃，前途无量'
+            }
+        ],
+        'n': [
+            {
+                char: '宁',
+                pinyin: 'Níng',
+                englishMeaning: 'Peaceful and tranquil',
+                chineseMeaning: '心如止水，宁静致远，淡泊明志'
+            },
+            {
+                char: '南',
+                pinyin: 'Nán',
+                englishMeaning: 'South, warmth',
+                chineseMeaning: '温暖如春，热情似火，心胸开阔'
+            }
+        ],
+        'o': [
+            {
+                char: '欧',
+                pinyin: 'Ōu',
+                englishMeaning: 'European connection',
+                chineseMeaning: '视野开阔，兼容并蓄，融汇中西'
+            },
+            {
+                char: '鸥',
+                pinyin: 'Ōu',
+                englishMeaning: 'Seagull, free spirit',
+                chineseMeaning: '自由自在，无拘无束，如海鸥翱翔'
+            }
+        ],
+        'p': [
+            {
+                char: '鹏',
+                pinyin: 'Péng',
+                englishMeaning: 'Legendary giant bird, ambition',
+                chineseMeaning: '大鹏展翅，志存高远，前程似锦'
+            },
+            {
+                char: '平',
+                pinyin: 'Píng',
+                englishMeaning: 'Peace and balance',
+                chineseMeaning: '平和稳重，公平正直，心态平衡'
+            }
+        ],
+        'q': [
+            {
+                char: '庆',
+                pinyin: 'Qìng',
+                englishMeaning: 'Celebration and joy',
+                chineseMeaning: '喜气洋洋，欢欣鼓舞，带来好运'
+            },
+            {
+                char: '青',
+                pinyin: 'Qīng',
+                englishMeaning: 'Youth, vibrant',
+                chineseMeaning: '青春活力，朝气蓬勃，生机盎然'
+            }
+        ],
+        'r': [
+            {
+                char: '瑞',
+                pinyin: 'Ruì',
+                englishMeaning: 'Auspicious, good fortune',
+                chineseMeaning: '祥瑞之兆，福气满满，吉祥如意'
+            },
+            {
+                char: '荣',
+                pinyin: 'Róng',
+                englishMeaning: 'Glory and honor',
+                chineseMeaning: '荣耀光辉，功成名就，备受尊敬'
+            }
+        ],
+        's': [
+            {
+                char: '思',
+                pinyin: 'Sī',
+                englishMeaning: 'Thought and reflection',
+                chineseMeaning: '思维敏捷，深思熟虑，智慧超群'
+            },
+            {
+                char: '顺',
+                pinyin: 'Shùn',
+                englishMeaning: 'Smooth and favorable',
+                chineseMeaning: '一帆风顺，万事如意，处事圆融'
+            },
+            {
+                char: '斯',
+                pinyin: 'Sī',
+                englishMeaning: 'Refined and elegant',
+                chineseMeaning: '文质彬彬，斯文有礼，举止优雅'
+            }
+        ],
+        't': [
+            {
+                char: '天',
+                pinyin: 'Tiān',
+                englishMeaning: 'Heaven, sky, natural talent',
+                chineseMeaning: '天资聪颖，胸怀宽广，志向高远'
+            },
+            {
+                char: '泰',
+                pinyin: 'Tài',
+                englishMeaning: 'Peace and security',
+                chineseMeaning: '安泰祥和，国泰民安，平安喜乐'
+            }
+        ],
+        'u': [
+            {
+                char: '宇',
+                pinyin: 'Yǔ',
+                englishMeaning: 'Universe, space',
+                chineseMeaning: '胸怀宇宙，视野开阔，格局宏大'
+            },
+            {
+                char: '玉',
+                pinyin: 'Yù',
+                englishMeaning: 'Jade, precious and pure',
+                chineseMeaning: '温润如玉，品质纯净，珍贵无比'
+            }
+        ],
+        'v': [
+            {
+                char: '维',
+                pinyin: 'Wéi',
+                englishMeaning: 'To maintain, dimension',
+                chineseMeaning: '维护正义，坚持原则，多维思考'
+            },
+            {
+                char: '薇',
+                pinyin: 'Wēi',
+                englishMeaning: 'Small and delicate flower',
+                chineseMeaning: '如蔷薇般美丽，坚韧而不失优雅'
             }
         ],
         'w': [
             {
                 char: '文',
                 pinyin: 'Wén',
-                englishMeaning: 'Culture, Literature',
-                chineseMeaning: '文化、文学'
+                englishMeaning: 'Culture and literacy',
+                chineseMeaning: '文采斐然，学识渊博，温文尔雅'
             },
             {
                 char: '伟',
                 pinyin: 'Wěi',
-                englishMeaning: 'Great, Extraordinary',
-                chineseMeaning: '伟大、非凡'
+                englishMeaning: 'Great and extraordinary',
+                chineseMeaning: '伟大非凡，卓越不凡，成就斐然'
+            },
+            {
+                char: '万',
+                pinyin: 'Wàn',
+                englishMeaning: 'Ten thousand, countless',
+                chineseMeaning: '才高八斗，学富五车，万事顺利'
+            }
+        ],
+        'x': [
+            {
+                char: '晓',
+                pinyin: 'Xiǎo',
+                englishMeaning: 'Dawn, understanding',
+                chineseMeaning: '聪明睿智，明察秋毫，通晓事理'
+            },
+            {
+                char: '雪',
+                pinyin: 'Xuě',
+                englishMeaning: 'Snow, pure and clean',
+                chineseMeaning: '纯洁无瑕，如雪般晶莹剔透'
+            }
+        ],
+        'y': [
+            {
+                char: '阳',
+                pinyin: 'Yáng',
+                englishMeaning: 'Sun, positive energy',
+                chineseMeaning: '阳光开朗，积极向上，充满活力'
+            },
+            {
+                char: '宜',
+                pinyin: 'Yí',
+                englishMeaning: 'Suitable and appropriate',
+                chineseMeaning: '宜室宜家，温和适宜，处事得当'
+            },
+            {
+                char: '雨',
+                pinyin: 'Yǔ',
+                englishMeaning: 'Rain, nourishment',
+                chineseMeaning: '如雨露般滋养万物，恩泽四方'
+            }
+        ],
+        'z': [
+            {
+                char: '志',
+                pinyin: 'Zhì',
+                englishMeaning: 'Ambition and aspiration',
+                chineseMeaning: '志向远大，意志坚定，矢志不渝'
+            },
+            {
+                char: '智',
+                pinyin: 'Zhì',
+                englishMeaning: 'Wisdom and intelligence',
+                chineseMeaning: '智慧超群，聪明睿智，见解独到'
+            },
+            {
+                char: '卓',
+                pinyin: 'Zhuó',
+                englishMeaning: 'Outstanding and excellent',
+                chineseMeaning: '卓越不凡，出类拔萃，成就非凡'
             }
         ]
     },
     lastNameInitials: {
+        'a': [
+            {
+                char: '安',
+                pinyin: 'Ān',
+                englishMeaning: 'Peace, a common Chinese surname',
+                chineseMeaning: '源于古代诸侯国，寓意平安祥和'
+            },
+            {
+                char: '艾',
+                pinyin: 'Ài',
+                englishMeaning: 'Wormwood plant, a Chinese surname',
+                chineseMeaning: '源于上古时期，象征坚韧不拔'
+            }
+        ],
+        'b': [
+            {
+                char: '白',
+                pinyin: 'Bái',
+                englishMeaning: 'White, pure, a Chinese surname',
+                chineseMeaning: '源于远古时期，象征纯洁无瑕'
+            },
+            {
+                char: '包',
+                pinyin: 'Bāo',
+                englishMeaning: 'Wrap, protect, a Chinese surname',
+                chineseMeaning: '源于春秋时期，寓意包容万象'
+            }
+        ],
+        'c': [
+            {
+                char: '陈',
+                pinyin: 'Chén',
+                englishMeaning: 'Old, display, a common Chinese surname',
+                chineseMeaning: '源于古代诸侯国，历史悠久'
+            },
+            {
+                char: '崔',
+                pinyin: 'Cuī',
+                englishMeaning: 'High mountain, a Chinese surname',
+                chineseMeaning: '源于山东一带，象征高耸挺拔'
+            }
+        ],
+        'd': [
+            {
+                char: '杜',
+                pinyin: 'Dù',
+                englishMeaning: 'Stop, prevent, a Chinese surname',
+                chineseMeaning: '源于周朝，寓意杜绝邪恶'
+            },
+            {
+                char: '邓',
+                pinyin: 'Dèng',
+                englishMeaning: 'A Chinese surname with historical significance',
+                chineseMeaning: '源于春秋时期，历史悠久'
+            }
+        ],
+        'e': [
+            {
+                char: '鄂',
+                pinyin: 'È',
+                englishMeaning: 'Surprised, a Chinese surname',
+                chineseMeaning: '源于古代地名，历史悠久'
+            }
+        ],
+        'f': [
+            {
+                char: '冯',
+                pinyin: 'Féng',
+                englishMeaning: 'Gallop, a Chinese surname',
+                chineseMeaning: '源于远古时期，象征奔腾向前'
+            },
+            {
+                char: '方',
+                pinyin: 'Fāng',
+                englishMeaning: 'Square, direction, a Chinese surname',
+                chineseMeaning: '源于上古时期，寓意正直方正'
+            }
+        ],
+        'g': [
+            {
+                char: '高',
+                pinyin: 'Gāo',
+                englishMeaning: 'Tall, high, a Chinese surname',
+                chineseMeaning: '源于远古时期，象征崇高'
+            },
+            {
+                char: '郭',
+                pinyin: 'Guō',
+                englishMeaning: 'Outer city wall, a Chinese surname',
+                chineseMeaning: '源于春秋时期，象征坚固防护'
+            }
+        ],
+        'h': [
+            {
+                char: '黄',
+                pinyin: 'Huáng',
+                englishMeaning: 'Yellow, a common Chinese surname',
+                chineseMeaning: '源于远古时期，象征皇家尊贵'
+            },
+            {
+                char: '胡',
+                pinyin: 'Hú',
+                englishMeaning: 'Beard, recklessly, a Chinese surname',
+                chineseMeaning: '源于上古时期，历史悠久'
+            }
+        ],
+        'j': [
+            {
+                char: '金',
+                pinyin: 'Jīn',
+                englishMeaning: 'Gold, metal, a Chinese surname',
+                chineseMeaning: '源于五行学说，象征富贵坚固'
+            },
+            {
+                char: '江',
+                pinyin: 'Jiāng',
+                englishMeaning: 'River, a Chinese surname',
+                chineseMeaning: '源于古代地名，象征宽广深远'
+            }
+        ],
+        'k': [
+            {
+                char: '孔',
+                pinyin: 'Kǒng',
+                englishMeaning: 'Hole, opening, a Chinese surname (Confucius)',
+                chineseMeaning: '源于春秋时期，与孔子同宗'
+            },
+            {
+                char: '柯',
+                pinyin: 'Kē',
+                englishMeaning: 'Axe handle, a Chinese surname',
+                chineseMeaning: '源于古代，象征坚韧有力'
+            }
+        ],
         'l': [
             {
                 char: '李',
                 pinyin: 'Lǐ',
-                englishMeaning: 'Plum',
-                chineseMeaning: '李子、美好'
+                englishMeaning: 'Plum, a very common Chinese surname',
+                chineseMeaning: '源于古代，象征坚韧甜美'
             },
             {
                 char: '林',
                 pinyin: 'Lín',
-                englishMeaning: 'Forest',
-                chineseMeaning: '森林、茂盛'
+                englishMeaning: 'Forest, a common Chinese surname',
+                chineseMeaning: '源于自然景观，象征繁茂兴旺'
+            },
+            {
+                char: '刘',
+                pinyin: 'Liú',
+                englishMeaning: 'Kill, a very common Chinese surname',
+                chineseMeaning: '源于上古时期，历史悠久'
+            }
+        ],
+        'm': [
+            {
+                char: '马',
+                pinyin: 'Mǎ',
+                englishMeaning: 'Horse, a common Chinese surname',
+                chineseMeaning: '源于图腾崇拜，象征奔腾不息'
+            },
+            {
+                char: '孟',
+                pinyin: 'Mèng',
+                englishMeaning: 'First, eldest, a Chinese surname',
+                chineseMeaning: '源于古代，象征长子继承'
+            }
+        ],
+        'n': [
+            {
+                char: '倪',
+                pinyin: 'Ní',
+                englishMeaning: 'A Chinese surname',
+                chineseMeaning: '源于春秋时期，历史悠久'
+            },
+            {
+                char: '聂',
+                pinyin: 'Niè',
+                englishMeaning: 'Whisper, a Chinese surname',
+                chineseMeaning: '源于上古时期，历史悠久'
+            }
+        ],
+        'p': [
+            {
+                char: '彭',
+                pinyin: 'Péng',
+                englishMeaning: 'A Chinese surname',
+                chineseMeaning: '源于远古时期，历史悠久'
+            },
+            {
+                char: '潘',
+                pinyin: 'Pān',
+                englishMeaning: 'A Chinese surname',
+                chineseMeaning: '源于春秋时期，历史悠久'
+            }
+        ],
+        'q': [
+            {
+                char: '钱',
+                pinyin: 'Qián',
+                englishMeaning: 'Money, a Chinese surname',
+                chineseMeaning: '源于古代，象征财富和价值'
+            },
+            {
+                char: '秦',
+                pinyin: 'Qín',
+                englishMeaning: 'A Chinese surname from ancient dynasty',
+                chineseMeaning: '源于秦朝，历史悠久'
+            }
+        ],
+        'r': [
+            {
+                char: '任',
+                pinyin: 'Rèn',
+                englishMeaning: 'Duty, a Chinese surname',
+                chineseMeaning: '源于古代，象征责任和担当'
+            },
+            {
+                char: '阮',
+                pinyin: 'Ruǎn',
+                englishMeaning: 'A Chinese surname',
+                chineseMeaning: '源于三国时期，历史悠久'
+            }
+        ],
+        's': [
+            {
+                char: '宋',
+                pinyin: 'Sòng',
+                englishMeaning: 'A Chinese surname from ancient dynasty',
+                chineseMeaning: '源于宋朝，象征文化繁荣'
+            },
+            {
+                char: '孙',
+                pinyin: 'Sūn',
+                englishMeaning: 'Grandson, a common Chinese surname',
+                chineseMeaning: '源于远古时期，象征家族传承'
+            },
+            {
+                char: '史',
+                pinyin: 'Shǐ',
+                englishMeaning: 'History, a Chinese surname',
+                chineseMeaning: '源于古代，象征历史记载'
+            }
+        ],
+        't': [
+            {
+                char: '唐',
+                pinyin: 'Táng',
+                englishMeaning: 'A Chinese surname from ancient dynasty',
+                chineseMeaning: '源于唐朝，象征文化鼎盛'
+            },
+            {
+                char: '田',
+                pinyin: 'Tián',
+                englishMeaning: 'Field, a Chinese surname',
+                chineseMeaning: '源于农耕文化，象征勤劳踏实'
             }
         ],
         'w': [
             {
                 char: '王',
                 pinyin: 'Wáng',
-                englishMeaning: 'King',
-                chineseMeaning: '君王、尊贵'
+                englishMeaning: 'King, the most common Chinese surname',
+                chineseMeaning: '源于远古时期，象征尊贵权威'
             },
             {
                 char: '吴',
                 pinyin: 'Wú',
-                englishMeaning: 'Military, Martial',
-                chineseMeaning: '武力、勇武'
+                englishMeaning: 'A Chinese surname from ancient state',
+                chineseMeaning: '源于吴国，历史悠久'
+            },
+            {
+                char: '魏',
+                pinyin: 'Wèi',
+                englishMeaning: 'A Chinese surname from ancient state',
+                chineseMeaning: '源于魏国，象征强大'
+            }
+        ],
+        'x': [
+            {
+                char: '徐',
+                pinyin: 'Xú',
+                englishMeaning: 'Slowly, a Chinese surname',
+                chineseMeaning: '源于春秋时期，象征稳重'
+            },
+            {
+                char: '谢',
+                pinyin: 'Xiè',
+                englishMeaning: 'Thank, a Chinese surname',
+                chineseMeaning: '源于古代，象征感恩'
+            }
+        ],
+        'y': [
+            {
+                char: '杨',
+                pinyin: 'Yáng',
+                englishMeaning: 'Poplar tree, a common Chinese surname',
+                chineseMeaning: '源于自然景观，象征挺拔向上'
+            },
+            {
+                char: '叶',
+                pinyin: 'Yè',
+                englishMeaning: 'Leaf, a Chinese surname',
+                chineseMeaning: '源于自然景观，象征生机'
+            }
+        ],
+        'z': [
+            {
+                char: '张',
+                pinyin: 'Zhāng',
+                englishMeaning: 'Stretch, a very common Chinese surname',
+                chineseMeaning: '源于远古时期，象征开拓进取'
+            },
+            {
+                char: '赵',
+                pinyin: 'Zhào',
+                englishMeaning: 'A common Chinese surname',
+                chineseMeaning: '源于赵国，历史悠久'
+            },
+            {
+                char: '周',
+                pinyin: 'Zhōu',
+                englishMeaning: 'Cycle, a Chinese surname',
+                chineseMeaning: '源于周朝，象征周全'
             }
         ]
     },
@@ -103,26 +777,74 @@ const phoneticMapping = {
         {
             char: '华',
             pinyin: 'Huá',
-            englishMeaning: 'Splendid, Magnificent',
-            chineseMeaning: '华丽、辉煌'
+            englishMeaning: 'Splendid and magnificent',
+            chineseMeaning: '华丽辉煌，光彩照人，气宇不凡'
         },
         {
             char: '明',
             pinyin: 'Míng',
-            englishMeaning: 'Bright, Clear',
-            chineseMeaning: '明亮、清晰'
+            englishMeaning: 'Bright and clear-sighted',
+            chineseMeaning: '明亮清晰，明察秋毫，光明磊落'
         },
         {
             char: '德',
             pinyin: 'Dé',
-            englishMeaning: 'Virtue, Morality',
-            chineseMeaning: '道德、品德'
+            englishMeaning: 'Virtue and moral excellence',
+            chineseMeaning: '品德高尚，道德文章，德才兼备'
         },
         {
             char: '强',
             pinyin: 'Qiáng',
-            englishMeaning: 'Strong, Powerful',
-            chineseMeaning: '强大、有力'
+            englishMeaning: 'Strong and powerful',
+            chineseMeaning: '强健有力，坚强不屈，实力超群'
+        },
+        {
+            char: '龙',
+            pinyin: 'Lóng',
+            englishMeaning: 'Dragon, symbol of power and nobility',
+            chineseMeaning: '如龙似虎，气势磅礴，尊贵非凡'
+        },
+        {
+            char: '雅',
+            pinyin: 'Yǎ',
+            englishMeaning: 'Elegant and refined',
+            chineseMeaning: '文雅高贵，举止优雅，品味高雅'
+        },
+        {
+            char: '嘉',
+            pinyin: 'Jiā',
+            englishMeaning: 'Excellent and praiseworthy',
+            chineseMeaning: '嘉言懿行，嘉勉有加，美好优秀'
+        },
+        {
+            char: '伦',
+            pinyin: 'Lún',
+            englishMeaning: 'Relationship, order',
+            chineseMeaning: '伦理道德，井然有序，关系和谐'
+        },
+        {
+            char: '杰',
+            pinyin: 'Jié',
+            englishMeaning: 'Outstanding and distinguished',
+            chineseMeaning: '杰出不凡，才华横溢，出类拔萃'
+        },
+        {
+            char: '宇',
+            pinyin: 'Yǔ',
+            englishMeaning: 'Universe, space',
+            chineseMeaning: '宇量大度，胸怀宇宙，视野开阔'
+        },
+        {
+            char: '轩',
+            pinyin: 'Xuān',
+            englishMeaning: 'High and dignified',
+            chineseMeaning: '轩昂大气，气宇轩昂，高贵典雅'
+        },
+        {
+            char: '瑞',
+            pinyin: 'Ruì',
+            englishMeaning: 'Auspicious and lucky',
+            chineseMeaning: '祥瑞之兆，吉祥如意，福气满满'
         }
     ]
 };
@@ -329,38 +1051,130 @@ app.post('/generate-name', async (req, res) => {
                                    phoneticMapping.lastNameInitials['l']) : // Default to 'l' if no match
                                   [];
             
-            // Randomly select characters for the name
-            const randomFirstChar = firstNameChars[Math.floor(Math.random() * firstNameChars.length)];
-            const randomSecondChar = phoneticMapping.secondChars[Math.floor(Math.random() * phoneticMapping.secondChars.length)];
+            // 为了增加随机性，我们可以根据名字的长度选择不同的字符
+            // 如果名字较长，可以选择更多的字符来匹配
+            const getRandomChar = (charArray) => {
+                const randomIndex = Math.floor(Math.random() * charArray.length);
+                return charArray[randomIndex];
+            };
             
-            // 确保meaning属性存在，如果不存在则提供默认值
-            if (!randomFirstChar.meaning) {
-                randomFirstChar.meaning = randomFirstChar.englishMeaning || randomFirstChar.chineseMeaning || 'beautiful character';
-            }
+            // 随机选择字符
+            const randomFirstChar = getRandomChar(firstNameChars);
+            const randomSecondChar = getRandomChar(phoneticMapping.secondChars);
+            // 随机选择第三个字符，用于生成三字名
+            const randomThirdChar = getRandomChar(phoneticMapping.secondChars);
             
-            if (!randomSecondChar.meaning) {
-                randomSecondChar.meaning = randomSecondChar.englishMeaning || randomSecondChar.chineseMeaning || 'auspicious character';
-            }
+            // 随机选择一些描述性词汇，增加含义的随机性和丰富性
+            const positiveTraits = [
+                '聪明睿智', '才华横溢', '勇敢无畏', '温柔体贴', 
+                '坚韧不拔', '诚实守信', '乐观向上', '谦虚谨慎',
+                '积极进取', '宽容大度', '气质非凡', '风度翩翩',
+                '优雅大方', '沉着冷静', '热情洋溢', '充满活力'
+            ];
+            
+            const positiveOutcomes = [
+                '前程似锦', '事业有成', '学业有成', '幸福美满', 
+                '平安喜乐', '健康长寿', '财源广进', '好运连连',
+                '成就非凡', '梦想成真', '一帆风顺', '万事如意',
+                '心想事成', '福寿双全', '吉祥如意', '锦绣前程'
+            ];
+            
+            // 随机选择特质和结果
+            const randomTrait = positiveTraits[Math.floor(Math.random() * positiveTraits.length)];
+            const randomOutcome = positiveOutcomes[Math.floor(Math.random() * positiveOutcomes.length)];
             
             let chineseName = '';
             let pinyinName = '';
             let meaningDesc = '';
+            let englishMeaningDesc = '';
             
-            // If we have a last name, use it as the surname
+            // 确保所有字符都有必要的属性，防止undefined错误
+            const ensureProperty = (obj, property, defaultValue = '') => {
+                return obj && obj[property] !== undefined ? obj[property] : defaultValue;
+            };
+            
+            // 随机决定是生成两字名还是三字名（不考虑姓氏）
+            const generateTwoCharName = Math.random() < 0.5;
+            
+            // 如果有姓，则使用姓作为中文姓氏
             if (lastName && lastNameChars.length > 0) {
-                const randomLastChar = lastNameChars[Math.floor(Math.random() * lastNameChars.length)];
-                chineseName = randomLastChar.char + randomFirstChar.char + randomSecondChar.char;
-                pinyinName = `${randomLastChar.pinyin} ${randomFirstChar.pinyin} ${randomSecondChar.pinyin}`;
-                meaningDesc = `"${randomLastChar.char}"${randomLastChar.meaning}，"${randomFirstChar.char}"${randomFirstChar.meaning}，"${randomSecondChar.char}"${randomSecondChar.meaning}。整体谐音"${lastName} ${firstName}"，寓意才华横溢、前程似锦。`;
+                const randomLastChar = getRandomChar(lastNameChars);
+                
+                // 获取字符的含义，确保不会出现undefined
+                const lastCharChineseMeaning = ensureProperty(randomLastChar, 'chineseMeaning', '作为姓氏');
+                const firstCharChineseMeaning = ensureProperty(randomFirstChar, 'chineseMeaning', '寓意美好');
+                const secondCharChineseMeaning = ensureProperty(randomSecondChar, 'chineseMeaning', '寓意吉祥');
+                const thirdCharChineseMeaning = ensureProperty(randomThirdChar, 'chineseMeaning', '寓意幸福');
+                
+                const lastCharEnglishMeaning = ensureProperty(randomLastChar, 'englishMeaning', 'a common Chinese surname');
+                const firstCharEnglishMeaning = ensureProperty(randomFirstChar, 'englishMeaning', 'represents good fortune');
+                const secondCharEnglishMeaning = ensureProperty(randomSecondChar, 'englishMeaning', 'represents prosperity');
+                const thirdCharEnglishMeaning = ensureProperty(randomThirdChar, 'englishMeaning', 'represents happiness');
+                
+                // 随机决定是生成两字名还是三字名（加上姓氏）
+                if (generateTwoCharName) {
+                    // 生成姓氏+单字名（两字名）
+                    chineseName = randomLastChar.char + randomFirstChar.char;
+                    pinyinName = `${randomLastChar.pinyin} ${randomFirstChar.pinyin}`;
+                    
+                    // 更加口语化的中文含义描述
+                    meaningDesc = `"${randomLastChar.char}"${lastCharChineseMeaning}，"${randomFirstChar.char}"${firstCharChineseMeaning}。这个名字与英文名"${lastName} ${firstName}"有谐音关联，寓意${randomTrait}、${randomOutcome}。`;
+                    
+                    // 更加口语化的英文含义描述
+                    englishMeaningDesc = `The surname "${randomLastChar.char}" (${randomLastChar.pinyin}) ${lastCharEnglishMeaning}. "${randomFirstChar.char}" (${randomFirstChar.pinyin}) ${firstCharEnglishMeaning}. This name sounds similar to "${lastName} ${firstName}" and represents someone who is ${randomTrait.split('、')[0]} and will have ${randomOutcome.split('、')[0]}.`;
+                } else {
+                    // 生成姓氏+双字名（三字名）
+                    chineseName = randomLastChar.char + randomFirstChar.char + randomSecondChar.char;
+                    pinyinName = `${randomLastChar.pinyin} ${randomFirstChar.pinyin} ${randomSecondChar.pinyin}`;
+                    
+                    // 更加口语化的中文含义描述
+                    meaningDesc = `"${randomLastChar.char}"${lastCharChineseMeaning}，"${randomFirstChar.char}"${firstCharChineseMeaning}，"${randomSecondChar.char}"${secondCharChineseMeaning}。这个名字与英文名"${lastName} ${firstName}"有谐音关联，寓意${randomTrait}、${randomOutcome}。`;
+                    
+                    // 更加口语化的英文含义描述
+                    englishMeaningDesc = `The surname "${randomLastChar.char}" (${randomLastChar.pinyin}) ${lastCharEnglishMeaning}. "${randomFirstChar.char}" (${randomFirstChar.pinyin}) ${firstCharEnglishMeaning}, while "${randomSecondChar.char}" (${randomSecondChar.pinyin}) ${secondCharEnglishMeaning}. This name sounds similar to "${lastName} ${firstName}" and represents someone who is ${randomTrait.split('、')[0]} and will have ${randomOutcome.split('、')[0]}.`;
+                }
             } else {
-                // If no last name, create a two-character name
-                chineseName = randomFirstChar.char + randomSecondChar.char;
-                pinyinName = `${randomFirstChar.pinyin} ${randomSecondChar.pinyin}`;
-                meaningDesc = `"${randomFirstChar.char}"${randomFirstChar.meaning}，"${randomSecondChar.char}"${randomSecondChar.meaning}。整体谐音"${firstName}"，寓意才华横溢、前程似锦。`;
+                // 获取字符的含义，确保不会出现undefined
+                const firstCharChineseMeaning = ensureProperty(randomFirstChar, 'chineseMeaning', '寓意美好');
+                const secondCharChineseMeaning = ensureProperty(randomSecondChar, 'chineseMeaning', '寓意吉祥');
+                const thirdCharChineseMeaning = ensureProperty(randomThirdChar, 'chineseMeaning', '寓意幸福');
+                
+                const firstCharEnglishMeaning = ensureProperty(randomFirstChar, 'englishMeaning', 'represents good fortune');
+                const secondCharEnglishMeaning = ensureProperty(randomSecondChar, 'englishMeaning', 'represents prosperity');
+                const thirdCharEnglishMeaning = ensureProperty(randomThirdChar, 'englishMeaning', 'represents happiness');
+                
+                // 随机决定是生成两字名还是三字名
+                if (generateTwoCharName) {
+                    // 生成双字名
+                    chineseName = randomFirstChar.char + randomSecondChar.char;
+                    pinyinName = `${randomFirstChar.pinyin} ${randomSecondChar.pinyin}`;
+                    
+                    // 更加口语化的中文含义描述
+                    meaningDesc = `"${randomFirstChar.char}"${firstCharChineseMeaning}，"${randomSecondChar.char}"${secondCharChineseMeaning}。这个名字与英文名"${firstName}"有谐音关联，寓意${randomTrait}、${randomOutcome}。`;
+                    
+                    // 更加口语化的英文含义描述
+                    englishMeaningDesc = `"${randomFirstChar.char}" (${randomFirstChar.pinyin}) ${firstCharEnglishMeaning}, while "${randomSecondChar.char}" (${randomSecondChar.pinyin}) ${secondCharEnglishMeaning}. This name sounds similar to "${firstName}" and represents someone who is ${randomTrait.split('、')[0]} and will have ${randomOutcome.split('、')[0]}.`;
+                } else {
+                    // 生成三字名
+                    chineseName = randomFirstChar.char + randomSecondChar.char + randomThirdChar.char;
+                    pinyinName = `${randomFirstChar.pinyin} ${randomSecondChar.pinyin} ${randomThirdChar.pinyin}`;
+                    
+                    // 更加口语化的中文含义描述
+                    meaningDesc = `"${randomFirstChar.char}"${firstCharChineseMeaning}，"${randomSecondChar.char}"${secondCharChineseMeaning}，"${randomThirdChar.char}"${thirdCharChineseMeaning}。这个名字与英文名"${firstName}"有谐音关联，寓意${randomTrait}、${randomOutcome}。`;
+                    
+                    // 更加口语化的英文含义描述
+                    englishMeaningDesc = `"${randomFirstChar.char}" (${randomFirstChar.pinyin}) ${firstCharEnglishMeaning}, "${randomSecondChar.char}" (${randomSecondChar.pinyin}) ${secondCharEnglishMeaning}, and "${randomThirdChar.char}" (${randomThirdChar.pinyin}) ${thirdCharEnglishMeaning}. This name sounds similar to "${firstName}" and represents someone who is ${randomTrait.split('、')[0]} and will have ${randomOutcome.split('、')[0]}.`;
+                }
             }
             
-            // 分离英文含义和中文含义
-            const englishMeaningDesc = `"${randomFirstChar.char}" means ${randomFirstChar.englishMeaning ? randomFirstChar.englishMeaning.replace(/[，。]/g, ', ') : 'beautiful character'}, "${randomSecondChar.char}" means ${randomSecondChar.englishMeaning ? randomSecondChar.englishMeaning.replace(/[，。]/g, ', ') : 'auspicious character'}. The name sounds similar to "${firstName}${lastName ? ' ' + lastName : ''}" and symbolizes talent and bright future.`;
+            // 随机决定是否使用谐音或寓意方法（50%的概率使用谐音，50%的概率使用寓意）
+            const usePhonetic = Math.random() < 0.5;
+            
+            // 如果使用寓意方法，修改描述中的谐音关联为寓意关联
+            if (!usePhonetic) {
+                meaningDesc = meaningDesc.replace('有谐音关联', '寓意相符');
+                englishMeaningDesc = englishMeaningDesc.replace('sounds similar to', 'has meaning that matches');
+            }
             
             return {
                 chinese: chineseName,
@@ -373,7 +1187,7 @@ app.post('/generate-name', async (req, res) => {
         
         // Generate custom names based on the English name components
         const customNames = [];
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 5; i++) {
             customNames.push(generateChineseNameFromEnglish(firstName, lastName));
         }
         
