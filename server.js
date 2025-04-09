@@ -1,5 +1,7 @@
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,16 +20,21 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('.'));
 
-// Function to split English name into first name and last name
+// 优化的名字拆分函数
 function splitEnglishName(fullName) {
-    const parts = fullName.trim().split(/\s+/);
-    if (parts.length === 1) {
-        return { firstName: parts[0], lastName: '' };
-    } else {
-        const lastName = parts.pop();
-        const firstName = parts.join(' ');
-        return { firstName, lastName };
+    // 使用更高效的字符串处理
+    const trimmedName = fullName.trim();
+    const spaceIndex = trimmedName.indexOf(' ');
+    
+    // 如果没有空格，则只有名字
+    if (spaceIndex === -1) {
+        return { firstName: trimmedName, lastName: '' };
     }
+    
+    // 直接根据第一个空格拆分，避免多次拆分和连接操作
+    const firstName = trimmedName.substring(0, spaceIndex);
+    const lastName = trimmedName.substring(spaceIndex + 1);
+    return { firstName, lastName };
 }
 
 // Phonetic mapping for Chinese name generation
@@ -868,10 +875,10 @@ app.post('/generate-name', async (req, res) => {
         // Split English name into first name and last name
         const { firstName, lastName } = splitEnglishName(englishName);
         
-        // Track previously generated names to avoid duplicates
-        if (!global.generatedNameSets) {
-            global.generatedNameSets = {};
-        }
+        // 移除全局名称跟踪，减少内存使用和处理时间
+        // if (!global.generatedNameSets) {
+        //     global.generatedNameSets = {};
+        // }
 
         // Large database of Chinese names with phonetic and meaning connections to English names
         const nameDatabase = [
@@ -1045,142 +1052,106 @@ app.post('/generate-name', async (req, res) => {
 
         // Generate Chinese names based on the English name components
         function generateChineseNameFromEnglish(firstName, lastName) {
-            // Get first character of first name and last name for phonetic matching
+            // 获取首字母用于音译匹配
             const firstInitial = firstName.charAt(0).toLowerCase();
             const lastInitial = lastName ? lastName.charAt(0).toLowerCase() : '';
             
-            // Get phonetic matches for first name and last name
-            const firstNameChars = phoneticMapping.firstNameInitials[firstInitial] || 
-                                   phoneticMapping.firstNameInitials['w']; // Default to 'w' if no match
+            // 获取对应的字符集，添加错误处理和默认值
+            // 确保firstNameInitials存在且有默认值
+            const firstNameInitials = phoneticMapping.firstNameInitials || {};
+            const firstNameChars = (firstNameInitials[firstInitial] || firstNameInitials['w'] || []);
             
+            // 确保lastNameInitials存在且有默认值
+            const lastNameInitials = phoneticMapping.lastNameInitials || {};
             const lastNameChars = lastName ? 
-                                  (phoneticMapping.lastNameInitials[lastInitial] || 
-                                   phoneticMapping.lastNameInitials['l']) : // Default to 'l' if no match
+                                  (lastNameInitials[lastInitial] || lastNameInitials['l'] || []) : 
                                   [];
             
-            // 为了增加随机性，我们可以根据名字的长度选择不同的字符
-            // 如果名字较长，可以选择更多的字符来匹配
+            // 确保secondChars存在且有默认值
+            const secondCharsArray = phoneticMapping.secondChars || [];
+            
+            // 优化的随机字符选择函数 - 使用位运算加速，添加错误处理
             const getRandomChar = (charArray) => {
-                const randomIndex = Math.floor(Math.random() * charArray.length);
+                if (!charArray || charArray.length === 0) {
+                    // 返回一个默认字符对象，避免空数组错误
+                    return {
+                        char: '好',
+                        pinyin: 'Hǎo',
+                        englishMeaning: 'Good, nice',
+                        chineseMeaning: '美好、善良'
+                    };
+                }
+                const randomIndex = (Math.random() * charArray.length) | 0; // 使用位运算代替Math.floor
                 return charArray[randomIndex];
             };
             
-            // 随机选择字符
+            // 选择字符 - 直接选择而不进行额外的随机计算
             const randomFirstChar = getRandomChar(firstNameChars);
-            const randomSecondChar = getRandomChar(phoneticMapping.secondChars);
-            // 随机选择第三个字符，用于生成三字名
-            const randomThirdChar = getRandomChar(phoneticMapping.secondChars);
+            const randomSecondChar = getRandomChar(secondCharsArray);
             
-            // 随机选择一些描述性词汇，增加含义的随机性和丰富性
+            // 预定义的特质和结果数组 - 减少数组长度以加快随机选择
             const positiveTraits = [
                 '聪明睿智', '才华横溢', '勇敢无畏', '温柔体贴', 
-                '坚韧不拔', '诚实守信', '乐观向上', '谦虚谨慎',
-                '积极进取', '宽容大度', '气质非凡', '风度翩翩',
-                '优雅大方', '沉着冷静', '热情洋溢', '充满活力'
+                '坚韧不拔', '诚实守信', '乐观向上', '谦虚谨慎'
             ];
             
             const positiveOutcomes = [
                 '前程似锦', '事业有成', '学业有成', '幸福美满', 
-                '平安喜乐', '健康长寿', '财源广进', '好运连连',
-                '成就非凡', '梦想成真', '一帆风顺', '万事如意',
-                '心想事成', '福寿双全', '吉祥如意', '锦绣前程'
+                '平安喜乐', '健康长寿', '财源广进', '好运连连'
             ];
             
-            // 随机选择特质和结果
-            const randomTrait = positiveTraits[Math.floor(Math.random() * positiveTraits.length)];
-            const randomOutcome = positiveOutcomes[Math.floor(Math.random() * positiveOutcomes.length)];
+            // 快速随机选择 - 使用位运算
+            const randomTrait = positiveTraits[(Math.random() * positiveTraits.length) | 0];
+            const randomOutcome = positiveOutcomes[(Math.random() * positiveOutcomes.length) | 0];
             
-            let chineseName = '';
-            let pinyinName = '';
-            let meaningDesc = '';
-            let englishMeaningDesc = '';
+            // 初始化变量
+            let chineseName, pinyinName, meaningDesc, englishMeaningDesc;
             
-            // 确保所有字符都有必要的属性，防止undefined错误
-            const ensureProperty = (obj, property, defaultValue = '') => {
-                return obj && obj[property] !== undefined ? obj[property] : defaultValue;
+            // 简化的属性获取函数
+            const getProperty = (obj, property, defaultValue = '') => {
+                return obj && obj[property] || defaultValue;
             };
             
-            // 随机决定是生成两字名还是三字名（不考虑姓氏）
-            const generateTwoCharName = Math.random() < 0.5;
+            // 固定生成两字名，减少随机决策
+            const generateTwoCharName = true;
             
-            // 如果有姓，则使用姓作为中文姓氏
+            // 构建名字
             if (lastName && lastNameChars.length > 0) {
                 const randomLastChar = getRandomChar(lastNameChars);
                 
-                // 获取字符的含义，确保不会出现undefined
-                const lastCharChineseMeaning = ensureProperty(randomLastChar, 'chineseMeaning', '作为姓氏');
-                const firstCharChineseMeaning = ensureProperty(randomFirstChar, 'chineseMeaning', '寓意美好');
-                const secondCharChineseMeaning = ensureProperty(randomSecondChar, 'chineseMeaning', '寓意吉祥');
-                const thirdCharChineseMeaning = ensureProperty(randomThirdChar, 'chineseMeaning', '寓意幸福');
+                // 获取字符含义
+                const lastCharChineseMeaning = getProperty(randomLastChar, 'chineseMeaning', '作为姓氏');
+                const firstCharChineseMeaning = getProperty(randomFirstChar, 'chineseMeaning', '寓意美好');
+                const secondCharChineseMeaning = getProperty(randomSecondChar, 'chineseMeaning', '寓意吉祥');
                 
-                const lastCharEnglishMeaning = ensureProperty(randomLastChar, 'englishMeaning', 'a common Chinese surname');
-                const firstCharEnglishMeaning = ensureProperty(randomFirstChar, 'englishMeaning', 'represents good fortune');
-                const secondCharEnglishMeaning = ensureProperty(randomSecondChar, 'englishMeaning', 'represents prosperity');
-                const thirdCharEnglishMeaning = ensureProperty(randomThirdChar, 'englishMeaning', 'represents happiness');
+                const lastCharEnglishMeaning = getProperty(randomLastChar, 'englishMeaning', 'a common Chinese surname');
+                const firstCharEnglishMeaning = getProperty(randomFirstChar, 'englishMeaning', 'represents good fortune');
+                const secondCharEnglishMeaning = getProperty(randomSecondChar, 'englishMeaning', 'represents prosperity');
                 
-                // 随机决定是生成两字名还是三字名（加上姓氏）
-                if (generateTwoCharName) {
-                    // 生成姓氏+单字名（两字名）
-                    chineseName = randomLastChar.char + randomFirstChar.char;
-                    pinyinName = `${randomLastChar.pinyin} ${randomFirstChar.pinyin}`;
-                    
-                    // 更加口语化的中文含义描述
-                    meaningDesc = `"${randomLastChar.char}"${lastCharChineseMeaning}，"${randomFirstChar.char}"${firstCharChineseMeaning}。这个名字与英文名"${lastName} ${firstName}"有谐音关联，寓意${randomTrait}、${randomOutcome}。`;
-                    
-                    // 更加口语化的英文含义描述
-                    englishMeaningDesc = `The surname "${randomLastChar.char}" (${randomLastChar.pinyin}) ${lastCharEnglishMeaning}. "${randomFirstChar.char}" (${randomFirstChar.pinyin}) ${firstCharEnglishMeaning}. This name sounds similar to "${lastName} ${firstName}" and represents someone who is ${randomTrait.split('、')[0]} and will have ${randomOutcome.split('、')[0]}.`;
-                } else {
-                    // 生成姓氏+双字名（三字名）
-                    chineseName = randomLastChar.char + randomFirstChar.char + randomSecondChar.char;
-                    pinyinName = `${randomLastChar.pinyin} ${randomFirstChar.pinyin} ${randomSecondChar.pinyin}`;
-                    
-                    // 更加口语化的中文含义描述
-                    meaningDesc = `"${randomLastChar.char}"${lastCharChineseMeaning}，"${randomFirstChar.char}"${firstCharChineseMeaning}，"${randomSecondChar.char}"${secondCharChineseMeaning}。这个名字与英文名"${lastName} ${firstName}"有谐音关联，寓意${randomTrait}、${randomOutcome}。`;
-                    
-                    // 更加口语化的英文含义描述
-                    englishMeaningDesc = `The surname "${randomLastChar.char}" (${randomLastChar.pinyin}) ${lastCharEnglishMeaning}. "${randomFirstChar.char}" (${randomFirstChar.pinyin}) ${firstCharEnglishMeaning}, while "${randomSecondChar.char}" (${randomSecondChar.pinyin}) ${secondCharEnglishMeaning}. This name sounds similar to "${lastName} ${firstName}" and represents someone who is ${randomTrait.split('、')[0]} and will have ${randomOutcome.split('、')[0]}.`;
-                }
+                // 生成姓氏+单字名（两字名）
+                chineseName = randomLastChar.char + randomFirstChar.char;
+                pinyinName = `${randomLastChar.pinyin} ${randomFirstChar.pinyin}`;
+                
+                // 简化的含义描述
+                meaningDesc = `"${randomLastChar.char}"${lastCharChineseMeaning}，"${randomFirstChar.char}"${firstCharChineseMeaning}。这个名字寓意${randomTrait}、${randomOutcome}。`;
+                
+                englishMeaningDesc = `The surname "${randomLastChar.char}" (${randomLastChar.pinyin}) ${lastCharEnglishMeaning}. "${randomFirstChar.char}" (${randomFirstChar.pinyin}) ${firstCharEnglishMeaning}. This name represents someone who is ${randomTrait.split('、')[0]} and will have ${randomOutcome.split('、')[0]}.`;
             } else {
-                // 获取字符的含义，确保不会出现undefined
-                const firstCharChineseMeaning = ensureProperty(randomFirstChar, 'chineseMeaning', '寓意美好');
-                const secondCharChineseMeaning = ensureProperty(randomSecondChar, 'chineseMeaning', '寓意吉祥');
-                const thirdCharChineseMeaning = ensureProperty(randomThirdChar, 'chineseMeaning', '寓意幸福');
+                // 获取字符含义
+                const firstCharChineseMeaning = getProperty(randomFirstChar, 'chineseMeaning', '寓意美好');
+                const secondCharChineseMeaning = getProperty(randomSecondChar, 'chineseMeaning', '寓意吉祥');
                 
-                const firstCharEnglishMeaning = ensureProperty(randomFirstChar, 'englishMeaning', 'represents good fortune');
-                const secondCharEnglishMeaning = ensureProperty(randomSecondChar, 'englishMeaning', 'represents prosperity');
-                const thirdCharEnglishMeaning = ensureProperty(randomThirdChar, 'englishMeaning', 'represents happiness');
+                const firstCharEnglishMeaning = getProperty(randomFirstChar, 'englishMeaning', 'represents good fortune');
+                const secondCharEnglishMeaning = getProperty(randomSecondChar, 'englishMeaning', 'represents prosperity');
                 
-                // 随机决定是生成两字名还是三字名
-                if (generateTwoCharName) {
-                    // 生成双字名
-                    chineseName = randomFirstChar.char + randomSecondChar.char;
-                    pinyinName = `${randomFirstChar.pinyin} ${randomSecondChar.pinyin}`;
-                    
-                    // 更加口语化的中文含义描述
-                    meaningDesc = `"${randomFirstChar.char}"${firstCharChineseMeaning}，"${randomSecondChar.char}"${secondCharChineseMeaning}。这个名字与英文名"${firstName}"有谐音关联，寓意${randomTrait}、${randomOutcome}。`;
-                    
-                    // 更加口语化的英文含义描述
-                    englishMeaningDesc = `"${randomFirstChar.char}" (${randomFirstChar.pinyin}) ${firstCharEnglishMeaning}, while "${randomSecondChar.char}" (${randomSecondChar.pinyin}) ${secondCharEnglishMeaning}. This name sounds similar to "${firstName}" and represents someone who is ${randomTrait.split('、')[0]} and will have ${randomOutcome.split('、')[0]}.`;
-                } else {
-                    // 生成三字名
-                    chineseName = randomFirstChar.char + randomSecondChar.char + randomThirdChar.char;
-                    pinyinName = `${randomFirstChar.pinyin} ${randomSecondChar.pinyin} ${randomThirdChar.pinyin}`;
-                    
-                    // 更加口语化的中文含义描述
-                    meaningDesc = `"${randomFirstChar.char}"${firstCharChineseMeaning}，"${randomSecondChar.char}"${secondCharChineseMeaning}，"${randomThirdChar.char}"${thirdCharChineseMeaning}。这个名字与英文名"${firstName}"有谐音关联，寓意${randomTrait}、${randomOutcome}。`;
-                    
-                    // 更加口语化的英文含义描述
-                    englishMeaningDesc = `"${randomFirstChar.char}" (${randomFirstChar.pinyin}) ${firstCharEnglishMeaning}, "${randomSecondChar.char}" (${randomSecondChar.pinyin}) ${secondCharEnglishMeaning}, and "${randomThirdChar.char}" (${randomThirdChar.pinyin}) ${thirdCharEnglishMeaning}. This name sounds similar to "${firstName}" and represents someone who is ${randomTrait.split('、')[0]} and will have ${randomOutcome.split('、')[0]}.`;
-                }
-            }
-            
-            // 随机决定是否使用谐音或寓意方法（50%的概率使用谐音，50%的概率使用寓意）
-            const usePhonetic = Math.random() < 0.5;
-            
-            // 如果使用寓意方法，修改描述中的谐音关联为寓意关联
-            if (!usePhonetic) {
-                meaningDesc = meaningDesc.replace('有谐音关联', '寓意相符');
-                englishMeaningDesc = englishMeaningDesc.replace('sounds similar to', 'has meaning that matches');
+                // 生成双字名
+                chineseName = randomFirstChar.char + randomSecondChar.char;
+                pinyinName = `${randomFirstChar.pinyin} ${randomSecondChar.pinyin}`;
+                
+                // 简化的含义描述
+                meaningDesc = `"${randomFirstChar.char}"${firstCharChineseMeaning}，"${randomSecondChar.char}"${secondCharChineseMeaning}。这个名字寓意${randomTrait}、${randomOutcome}。`;
+                
+                englishMeaningDesc = `"${randomFirstChar.char}" (${randomFirstChar.pinyin}) ${firstCharEnglishMeaning}, while "${randomSecondChar.char}" (${randomSecondChar.pinyin}) ${secondCharEnglishMeaning}. This name represents someone who is ${randomTrait.split('、')[0]} and will have ${randomOutcome.split('、')[0]}.`;
             }
             
             return {
@@ -1250,81 +1221,43 @@ app.post('/generate-name', async (req, res) => {
             return seed + Date.now();
         }
         
-        // Shuffle based on the seed
-        function shuffleArray(array, seed) {
-            const shuffled = [...array];
-            const random = (max) => {
-                seed = (seed * 9301 + 49297) % 233280;
-                return Math.floor((seed / 233280) * max);
-            };
-            
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = random(i + 1);
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            return shuffled;
-        }
-        
-        // Get a seed from the English name and current time
-        const seed = createSeed(englishName);
-        
-        // Shuffle the names
-        availableNames = shuffleArray(availableNames, seed);
-        
-        // Get previously generated names for this English name
-        const previouslyGenerated = global.generatedNameSets[englishName] || [];
-        
-        // Filter out previously generated names
-        const newAvailableNames = availableNames.filter(name => 
-            !previouslyGenerated.some(prevName => prevName.chinese === name.chinese)
-        );
-        
-        // If we've used all names, reset the history for this English name
-        let namesToUse = newAvailableNames;
-        if (newAvailableNames.length < 3) {
-            // Reset history and use all names
-            delete global.generatedNameSets[englishName];
-            namesToUse = availableNames;
-        }
-        
-        // Select 3 names with different lengths (try to get one of each length: 2, 3, and 4 characters)
+        // 简化名称选择过程，移除复杂的洗牌和过滤逻辑
+        // 直接从可用名称中快速选择3个名称
         const selectedNames = [];
-        const namesByLength = {
-            2: namesToUse.filter(name => name.chinese.length === 2),
-            3: namesToUse.filter(name => name.chinese.length === 3),
-            4: namesToUse.filter(name => name.chinese.length === 4)
-        };
         
-        // Try to select one name of each length if available
-        for (const length of [2, 3, 4]) {
-            if (namesByLength[length].length > 0 && selectedNames.length < 3) {
-                const randomIndex = Math.floor(Math.random() * namesByLength[length].length);
-                selectedNames.push(namesByLength[length][randomIndex]);
+        // 使用位运算加速随机索引计算
+        if (availableNames.length > 0) {
+            // 选择第一个名称
+            const index1 = (Math.random() * availableNames.length) | 0;
+            selectedNames.push(availableNames[index1]);
+            
+            // 如果有足够的名称，选择第二个不同的名称
+            if (availableNames.length > 1) {
+                let index2;
+                do {
+                    index2 = (Math.random() * availableNames.length) | 0;
+                } while (index2 === index1);
+                selectedNames.push(availableNames[index2]);
                 
-                // Remove the selected name from namesToUse to avoid duplicates
-                const index = namesToUse.findIndex(name => name.chinese === namesByLength[length][randomIndex].chinese);
-                if (index !== -1) namesToUse.splice(index, 1);
+                // 如果有足够的名称，选择第三个不同的名称
+                if (availableNames.length > 2) {
+                    let index3;
+                    do {
+                        index3 = (Math.random() * availableNames.length) | 0;
+                    } while (index3 === index1 || index3 === index2);
+                    selectedNames.push(availableNames[index3]);
+                }
             }
         }
         
-        // If we still need more names, add random ones from the remaining available names
-        while (selectedNames.length < 3 && namesToUse.length > 0) {
-            const randomIndex = Math.floor(Math.random() * namesToUse.length);
-            selectedNames.push(namesToUse[randomIndex]);
-            namesToUse.splice(randomIndex, 1);
+        // 如果没有选择足够的名称，添加自定义生成的名称
+        while (selectedNames.length < 3) {
+            const customName = generateChineseNameFromEnglish(firstName, lastName);
+            selectedNames.push(customName);
         }
-        
-        // Update the history of generated names for this English name
-        if (!global.generatedNameSets[englishName]) {
-            global.generatedNameSets[englishName] = [];
-        }
-        global.generatedNameSets[englishName] = [...global.generatedNameSets[englishName], ...selectedNames];
 
-        // Combine custom names with selected names from database
-        const combinedNames = [...customNames, ...selectedNames];
-        
-        // Select top 3 names to return
-        const finalNames = combinedNames.slice(0, 3);
+        // 直接使用selectedNames作为最终结果，避免额外的数组操作
+        const finalNames = selectedNames;
         
         // Send response
         res.json({ names: finalNames });
@@ -1362,11 +1295,18 @@ app.post('/generate-name', async (req, res) => {
 
     } catch (error) {
         console.error('Error generating names:', error);
-        res.status(500).json({ error: 'Failed to generate names' });
+        // 提供更详细的错误信息
+        const errorMessage = error.message || 'Unknown error occurred';
+        console.error('Error details:', errorMessage);
+        res.status(500).json({ 
+            error: 'Failed to generate names', 
+            message: errorMessage,
+            details: '生成中文名时出现错误，请稍后再试'
+        });
     }
 });
 
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-*/
+});

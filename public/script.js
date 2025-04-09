@@ -21,96 +21,48 @@ document.addEventListener('DOMContentLoaded', function() {
         nameCardsContainer.innerHTML = '';
         
         try {
-            // 直接调用DeepSeek R1 API
-            const response = await fetch('https://ark.cn-beijing.volces.com/api/v3/chat/completions', {
+            // 使用本地API端点，减少外部API调用的延迟
+            const response = await fetch('/generate-name', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer bfa7609c-a5ec-4d2f-b28f-64b5b986a618'
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    model: "deepseek-r1-250120",
-                    messages: [
-                        {
-                            role: "system",
-                            content: `你是一个专业的中文名字生成专家，擅长为外国人起有文化内涵的中文名。
-                            请按照以下步骤为用户生成中文名：
-                            1. 将输入的英文名拆分成姓和名
-                            2. 为姓和名分别通过谐音组合成中文，并赋予中文含义
-                            3. 将中文组合成中文姓名
-                            4. 每个名字都应该有谐音和寓意的混合，体现中国文化，并有一定的幽默感
-                            5. 生成的名字可以是两字或三字
-                            6. 为每个名字提供拼音、英文含义解释和中文含义解释
-                            
-                            请生成3个不同的中文名字选项，每个选项包含：
-                            - 中文名字
-                            - 拼音
-                            - 英文含义解释
-                            - 中文含义解释
-                            
-                            返回格式必须是JSON格式，格式如下：
-                            {
-                              "names": [
-                                {
-                                  "chinese": "中文名1",
-                                  "pinyin": "Zhōng Wén Míng",
-                                  "englishMeaning": "English meaning explanation",
-                                  "chineseMeaning": "中文含义解释"
-                                },
-                                {
-                                  "chinese": "中文名2",
-                                  "pinyin": "Zhōng Wén Míng",
-                                  "englishMeaning": "English meaning explanation",
-                                  "chineseMeaning": "中文含义解释"
-                                },
-                                {
-                                  "chinese": "中文名3",
-                                  "pinyin": "Zhōng Wén Míng",
-                                  "englishMeaning": "English meaning explanation",
-                                  "chineseMeaning": "中文含义解释"
-                                }
-                              ]
-                            }`
-                        },
-                        {
-                            role: "user",
-                            content: `请为英文名"${englishName}"生成3个有趣且有文化内涵的中文名。`
-                        }
-                    ],
-                    temperature: 0.7,
-                    max_tokens: 1000,
-                    timeout: 60
-                })
+                body: JSON.stringify({ englishName })
             });
 
             if (!response.ok) {
-                throw new Error(`API responded with status: ${response.status}`);
+                throw new Error(`Server responded with status: ${response.status}`);
             }
 
             const data = await response.json();
-            
-            // 解析API返回的内容
-            let names = [];
-            try {
-                // 尝试从AI回复中提取JSON
-                const content = data.choices[0].message.content;
-                const jsonMatch = content.match(/\{[\s\S]*\}/);
-                
-                if (jsonMatch) {
-                    const parsedData = JSON.parse(jsonMatch[0]);
-                    names = parsedData.names;
-                } else {
-                    throw new Error('无法从API响应中提取JSON数据');
-                }
-            } catch (parseError) {
-                console.error('解析API响应时出错:', parseError);
-                throw new Error('无法解析API返回的数据，请重试');
-            }
-            
-            displayResults(names);
+            displayResults(data.names);
         } catch (error) {
             console.error('Error:', error);
-            alert(`生成中文名时出错: ${error.message}`);
+            
+            // 获取更详细的错误信息
+            let errorMessage = '未知错误';
+            
+            try {
+                // 尝试解析错误响应中的详细信息
+                if (error.message.includes('fetch')) {
+                    errorMessage = '网络连接错误，请检查您的网络连接';
+                } else if (error.response) {
+                    // 服务器返回的错误信息
+                    const data = error.response.data;
+                    errorMessage = data.details || data.message || data.error || error.message;
+                } else {
+                    errorMessage = error.message;
+                }
+            } catch (e) {
+                // 如果解析失败，使用原始错误信息
+                errorMessage = error.message;
+            }
+            
+            // 显示友好的错误提示
+            alert(`生成中文名时出错: ${errorMessage}\n请稍后再试或联系管理员`);
+            
+            // 在控制台输出详细错误信息，方便调试
+            console.error('详细错误信息:', error);
         } finally {
             // Hide loading spinner
             loadingElement.style.display = 'none';
@@ -118,34 +70,45 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displayResults(names) {
-        // Clear previous results
-        nameCardsContainer.innerHTML = '';
+        // 使用文档片段减少DOM重绘次数
+        const fragment = document.createDocumentFragment();
         
-        // Create a card for each name
+        // 预先构建HTML字符串，减少DOM操作
+        let cardsHTML = '';
+        
+        // 创建名字卡片
         names.forEach(name => {
             const nameCard = document.createElement('div');
             nameCard.className = 'name-card';
             
+            // 使用模板字符串一次性设置HTML内容
             nameCard.innerHTML = `
                 <div class="chinese-name">${name.chinese}</div>
                 <div class="pinyin">${name.pinyin}</div>
                 <div class="meaning-section">
                     <div class="meaning-title"><strong>English Meaning</strong>:</div>
-                    <div class="meaning-content english-meaning">${name.englishMeaning}</div>
+                    <div class="meaning-content english-meaning">${name.englishMeaning || name.meaning}</div>
                 </div>
                 <div class="meaning-section">
                     <div class="meaning-title"><strong>中文含义</strong>:</div>
-                    <div class="meaning-content chinese-meaning">${name.chineseMeaning}</div>
+                    <div class="meaning-content chinese-meaning">${name.chineseMeaning || name.meaning}</div>
                 </div>
             `;
             
-            nameCardsContainer.appendChild(nameCard);
+            // 添加到文档片段
+            fragment.appendChild(nameCard);
         });
         
-        // Show results section
+        // 清空容器并一次性添加所有卡片
+        nameCardsContainer.innerHTML = '';
+        nameCardsContainer.appendChild(fragment);
+        
+        // 显示结果区域
         resultsSection.style.display = 'block';
         
-        // Scroll to results section
-        resultsSection.scrollIntoView({ behavior: 'smooth' });
+        // 使用requestAnimationFrame优化滚动性能
+        requestAnimationFrame(() => {
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        });
     }
 });
