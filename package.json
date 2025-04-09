@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "name",
   "version": "1.0.0",
   "description": "",
@@ -12,5 +13,20 @@
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
+=======
+  "name": "chinese-name-generator",
+  "version": "1.0.0",
+  "description": "A web application that generates Chinese names based on English names",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "axios": "^1.6.2",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.3.1"
+>>>>>>> master
   }
 }

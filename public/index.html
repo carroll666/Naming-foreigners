@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Name Generator | 中文名生成器</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chinese Name Generator</h1>
+            <h2>中文名生成器</h2>
+            <p class="subtitle">Find your perfect Chinese name with cultural meaning</p>
+            <p class="subtitle-zh">寻找有文化内涵的完美中文名</p>
+        </header>
+        
+        <main>
+            <div class="input-section">
+                <label for="english-name">Enter your English name:</label>
+                <input type="text" id="english-name" placeholder="e.g. John, Emma, Michael...">
+                <button id="generate-btn">Generate Chinese Names 生成中文名</button>
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Generating your Chinese names...</p>
+                    <p>正在生成您的中文名...</p>
+                </div>
+            </div>
+            
+            <div class="results-section" id="results-section">
+                <h3>Your Chinese Name Options:</h3>
+                <div class="name-cards" id="name-cards">
+                    <!-- Name cards will be generated here -->
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Created with ❤️ | Powered by DeepSeek R1 AI</p>
+        </footer>
+    </div>
+    
+    <script src="/script.js"></script>
+</body>
+</html>
