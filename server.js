@@ -1052,26 +1052,59 @@ app.post('/generate-name', async (req, res) => {
 
         // Generate Chinese names based on the English name components
         function generateChineseNameFromEnglish(firstName, lastName) {
-            // 获取首字母用于音译匹配
+            // 参数验证和默认值处理
+            if (!firstName || typeof firstName !== 'string') {
+                firstName = 'Guest';
+            }
+            
+            // 获取英文名的发音特征，不仅仅是首字母，还考虑整个名字的发音
             const firstInitial = firstName.charAt(0).toLowerCase();
             const lastInitial = lastName ? lastName.charAt(0).toLowerCase() : '';
             
+            // 增强的发音特征分析函数
+            const getNamePhoneticFeatures = (name) => {
+                if (!name || typeof name !== 'string') {
+                    return { vowelGroups: [], consonantGroups: [], specialSounds: [] };
+                }
+                
+                const lowercaseName = name.toLowerCase();
+                // 提取元音组合，用于匹配中文谐音
+                const vowelGroups = lowercaseName.match(/[aeiouy]{1,3}/g) || [];
+                // 提取辅音组合，用于匹配中文谐音
+                const consonantGroups = lowercaseName.match(/[bcdfghjklmnpqrstvwxz]{1,3}/g) || [];
+                // 提取特殊音节，如'ch', 'sh', 'zh'等
+                const specialSounds = [];
+                if(lowercaseName.includes('ch')) specialSounds.push('ch');
+                if(lowercaseName.includes('sh')) specialSounds.push('sh');
+                if(lowercaseName.includes('zh')) specialSounds.push('zh');
+                if(lowercaseName.includes('th')) specialSounds.push('th');
+                
+                return { vowelGroups, consonantGroups, specialSounds };
+            };
+            
+            const firstNameFeatures = getNamePhoneticFeatures(firstName);
+            const lastNameFeatures = lastName ? getNamePhoneticFeatures(lastName) : null;
+            
             // 获取对应的字符集，添加错误处理和默认值
-            // 确保firstNameInitials存在且有默认值
             const firstNameInitials = phoneticMapping.firstNameInitials || {};
-            const firstNameChars = (firstNameInitials[firstInitial] || firstNameInitials['w'] || []);
+            // 基于首字母和发音特征选择合适的字符
+            let firstNameChars = (firstNameInitials[firstInitial] || firstNameInitials['w'] || []);
             
             // 确保lastNameInitials存在且有默认值
             const lastNameInitials = phoneticMapping.lastNameInitials || {};
-            const lastNameChars = lastName ? 
-                                  (lastNameInitials[lastInitial] || lastNameInitials['l'] || []) : 
-                                  [];
+            let lastNameChars = lastName ? 
+                               (lastNameInitials[lastInitial] || lastNameInitials['l'] || []) : 
+                               [];
             
             // 确保secondChars存在且有默认值
-            const secondCharsArray = phoneticMapping.secondChars || [];
+            const secondCharsArray = phoneticMapping.secondChars || [
+                { char: '明', pinyin: 'Míng', englishMeaning: 'Bright, clear', chineseMeaning: '光明磊落' },
+                { char: '华', pinyin: 'Huá', englishMeaning: 'Magnificent, splendid', chineseMeaning: '才华横溢' },
+                { char: '伟', pinyin: 'Wěi', englishMeaning: 'Great, mighty', chineseMeaning: '伟大非凡' }
+            ];
             
-            // 优化的随机字符选择函数 - 使用位运算加速，添加错误处理
-            const getRandomChar = (charArray) => {
+            // 优化的随机字符选择函数 - 考虑谐音匹配度
+            const getRandomChar = (charArray, nameFeatures = null) => {
                 if (!charArray || charArray.length === 0) {
                     // 返回一个默认字符对象，避免空数组错误
                     return {
@@ -1081,87 +1114,87 @@ app.post('/generate-name', async (req, res) => {
                         chineseMeaning: '美好、善良'
                     };
                 }
-                const randomIndex = (Math.random() * charArray.length) | 0; // 使用位运算代替Math.floor
+                
+                // 如果有发音特征，尝试找到最匹配的字符
+                if (nameFeatures) {
+                    // 这里可以实现更复杂的匹配算法，目前简化处理
+                    // 随机选择，但未来可以基于发音相似度排序
+                }
+                
+                // 增强的随机选择算法，考虑发音相似度
+                const randomIndex = (Math.random() * charArray.length) | 0;
+                
+                // 如果有发音特征，尝试找到最匹配的字符
+                if (nameFeatures && nameFeatures.vowelGroups.length > 0) {
+                    // 简单实现：优先选择包含相同元音的字符
+                    const preferredChars = charArray.filter(char => {
+                        const pinyinLower = char.pinyin.toLowerCase();
+                        return nameFeatures.vowelGroups.some(vowel => pinyinLower.includes(vowel));
+                    });
+                    
+                    if (preferredChars.length > 0) {
+                        return preferredChars[(Math.random() * preferredChars.length) | 0];
+                    }
+                }
+                
                 return charArray[randomIndex];
             };
             
-            // 选择字符 - 直接选择而不进行额外的随机计算
-            const randomFirstChar = getRandomChar(firstNameChars);
-            const randomSecondChar = getRandomChar(secondCharsArray);
+            // 选择字符 - 考虑英文名的发音特征
+            const randomFirstChar = getRandomChar(firstNameChars, firstNameFeatures);
+            const randomSecondChar = getRandomChar(secondCharsArray, firstNameFeatures);
             
-            // 预定义的特质和结果数组 - 减少数组长度以加快随机选择
+            // 增加幽默和文化元素的数组
             const positiveTraits = [
                 '聪明睿智', '才华横溢', '勇敢无畏', '温柔体贴', 
-                '坚韧不拔', '诚实守信', '乐观向上', '谦虚谨慎'
+                '坚韧不拔', '诚实守信', '乐观向上', '谦虚谨慎',
+                '风趣幽默', '通情达理', '心灵手巧', '足智多谋'
             ];
             
             const positiveOutcomes = [
                 '前程似锦', '事业有成', '学业有成', '幸福美满', 
-                '平安喜乐', '健康长寿', '财源广进', '好运连连'
+                '平安喜乐', '健康长寿', '财源广进', '好运连连',
+                '名扬四海', '德才兼备', '一帆风顺', '鹏程万里'
+            ];
+            
+            // 中西文化融合的幽默元素
+            const humorElements = [
+                '像会打太极的拳击手', '如东方的哈利波特', 
+                '集孔子智慧与爱因斯坦才华于一身', '既能煮意大利面又能做一手好饺子',
+                '能用筷子吃汉堡的人', '会用英文讲中国笑话的才子',
+                '既懂莎士比亚又读过李白的通才', '能在KTV唱中英文歌的全能歌手'
             ];
             
             // 快速随机选择 - 使用位运算
             const randomTrait = positiveTraits[(Math.random() * positiveTraits.length) | 0];
             const randomOutcome = positiveOutcomes[(Math.random() * positiveOutcomes.length) | 0];
+            const randomHumor = humorElements[(Math.random() * humorElements.length) | 0];
             
             // 初始化变量
-            let chineseName, pinyinName, meaningDesc, englishMeaningDesc;
+            let chineseName, pinyinName, meaningDesc, englishMeaningDesc, chineseMeaningDesc;
             
             // 简化的属性获取函数
             const getProperty = (obj, property, defaultValue = '') => {
                 return obj && obj[property] || defaultValue;
             };
             
-            // 固定生成两字名，减少随机决策
-            const generateTwoCharName = true;
-            
-            // 构建名字
+            // 构建名字 - 增加英文名与中文名的谐音关联说明
             if (lastName && lastNameChars.length > 0) {
-                const randomLastChar = getRandomChar(lastNameChars);
+                const randomLastChar = getRandomChar(lastNameChars, lastNameFeatures);
                 
                 // 获取字符含义
                 const lastCharChineseMeaning = getProperty(randomLastChar, 'chineseMeaning', '作为姓氏');
                 const firstCharChineseMeaning = getProperty(randomFirstChar, 'chineseMeaning', '寓意美好');
-                const secondCharChineseMeaning = getProperty(randomSecondChar, 'chineseMeaning', '寓意吉祥');
                 
                 const lastCharEnglishMeaning = getProperty(randomLastChar, 'englishMeaning', 'a common Chinese surname');
                 const firstCharEnglishMeaning = getProperty(randomFirstChar, 'englishMeaning', 'represents good fortune');
-                const secondCharEnglishMeaning = getProperty(randomSecondChar, 'englishMeaning', 'represents prosperity');
                 
                 // 生成姓氏+单字名（两字名）
                 chineseName = randomLastChar.char + randomFirstChar.char;
                 pinyinName = `${randomLastChar.pinyin} ${randomFirstChar.pinyin}`;
                 
-                // 简化的含义描述
-                meaningDesc = `"${randomLastChar.char}"${lastCharChineseMeaning}，"${randomFirstChar.char}"${firstCharChineseMeaning}。这个名字寓意${randomTrait}、${randomOutcome}。`;
-                
-                englishMeaningDesc = `The surname "${randomLastChar.char}" (${randomLastChar.pinyin}) ${lastCharEnglishMeaning}. "${randomFirstChar.char}" (${randomFirstChar.pinyin}) ${firstCharEnglishMeaning}. This name represents someone who is ${randomTrait.split('、')[0]} and will have ${randomOutcome.split('、')[0]}.`;
-            } else {
-                // 获取字符含义
-                const firstCharChineseMeaning = getProperty(randomFirstChar, 'chineseMeaning', '寓意美好');
-                const secondCharChineseMeaning = getProperty(randomSecondChar, 'chineseMeaning', '寓意吉祥');
-                
-                const firstCharEnglishMeaning = getProperty(randomFirstChar, 'englishMeaning', 'represents good fortune');
-                const secondCharEnglishMeaning = getProperty(randomSecondChar, 'englishMeaning', 'represents prosperity');
-                
-                // 生成双字名
-                chineseName = randomFirstChar.char + randomSecondChar.char;
-                pinyinName = `${randomFirstChar.pinyin} ${randomSecondChar.pinyin}`;
-                
-                // 简化的含义描述
-                meaningDesc = `"${randomFirstChar.char}"${firstCharChineseMeaning}，"${randomSecondChar.char}"${secondCharChineseMeaning}。这个名字寓意${randomTrait}、${randomOutcome}。`;
-                
-                englishMeaningDesc = `"${randomFirstChar.char}" (${randomFirstChar.pinyin}) ${firstCharEnglishMeaning}, while "${randomSecondChar.char}" (${randomSecondChar.pinyin}) ${secondCharEnglishMeaning}. This name represents someone who is ${randomTrait.split('、')[0]} and will have ${randomOutcome.split('、')[0]}.`;
-            }
-            
-            return {
-                chinese: chineseName,
-                pinyin: pinyinName,
-                meaning: meaningDesc,
-                englishMeaning: englishMeaningDesc,
-                chineseMeaning: meaningDesc
-            };
-        }
+                // 谐音关联说明
+                const lastNamePhoneticNote = `
         
         // Generate custom names based on the English name components
         const customNames = [];
